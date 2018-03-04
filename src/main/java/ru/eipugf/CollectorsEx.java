@@ -26,7 +26,7 @@ import java.util.TreeSet;
  * <p>
  * <ul>
  * <li><b>collectNMax</b>
- * - Creates a collector to find the maximum elements</li>
+ * - Creates a collector to find the n maximum elements.</li>
  * </ul>
  *
  * @author Evgeny Karsskiy
@@ -47,7 +47,9 @@ public final class CollectorsEx {
      * <p>
      * Example.
      * {@code LongStreamEx.of(9,10,7,5,8).collect(CollectorsEx.collectNMax(3))}
-     * Returning: 10, 9, 8
+     * Returning: 10
+     *            9
+     *            8
      * </p>
      *
      * @param nmax - desirable number of maximums
@@ -83,7 +85,7 @@ public final class CollectorsEx {
         private final int nmax;
 
         /**
-         * construct MaxNBuffer for nmax elements.
+         * Construct MaxNBuffer for nmax elements.
          *
          * @param numberOfMaximums The number of maximums.
          */
@@ -111,7 +113,7 @@ public final class CollectorsEx {
         }
 
         /**
-         * <p>Merge maximum buffers.</p>
+         * Merge maximum buffers.
          *
          * @param other Other maximums buffer.
          * @return this

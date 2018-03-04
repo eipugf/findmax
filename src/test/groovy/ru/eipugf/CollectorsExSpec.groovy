@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package groovy.ru.eipugf
+package ru.eipugf
 
 import one.util.streamex.LongStreamEx
-import ru.eipugf.CollectorsEx
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -25,7 +24,7 @@ import spock.lang.Unroll
  * Unit Tests for CollectorsEx
  *
  * @author Evgeny Karsskiy
- * @see CollectorsEx
+ * @see {@link ru.eipugf.CollectorsEx}
  * @since 0.0.1
  */
 class CollectorsExSpec extends Specification {
