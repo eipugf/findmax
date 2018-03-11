@@ -22,87 +22,91 @@ import picocli.CommandLine;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.stream.Stream;
 
 /**
- * <p>The main class of the application for
- * finding n maximal numbers from a large file.</p>
+ * Console application interface for searching n maximal long numbers for a
+ * large file.
+ * This class implements the function of displaying reference information
+ * about the application and the version of the application.
  *
  * @author Evgeny Karsskiy
  * @since 0.0.1
  */
-@CommandLine.Command(version = FindMax.VERSION,
+@CommandLine.Command(
+        name = "find-max",
+        version = FindMax.VERSION,
         header = "%nFind Max console util%n",
         description = "Program for finding the maximum numbers in a large file",
         footer = "%nSee email:eipugf@gmail.com", showDefaultValues = true)
 public class FindMax implements Runnable {
     /**
-     * Application version.
+     * This field contains the version of the console application for the
+     * version in the help information.
      */
     public static final String VERSION = "Maximums finder application v0.0.1";
 
     /**
-     * Path to file.
+     * The path to the file in which the numbers are row-by-line.
+     * This parameter is required.
      */
     @CommandLine.Option(names = "--file",
+            required = true,
             description = "Path to file")
-    private String file;
+    private Path pathToFile;
 
     /**
-     * Desirable number of maximums. default value 1.
+     * Contains Desired number of maximum long elements to be found in the
+     * file.
      */
     @CommandLine.Option(names = "--nmax",
             description = "The number of maximums")
-    private int nmax = 1;
+    private int numberOfMaximums = 1;
 
     /**
-     * Help call flag.
+     * {@code true} if the help is called.
      */
     @CommandLine.Option(names = {"-h", "-H", "--help"}, usageHelp = true,
             description = "Print usage help and exit.")
     private boolean usageHelpRequested;
 
     /**
-     * Version call flag.
+     * {@code true} if a version help is called.
      */
     @CommandLine.Option(names = {"-V", "-v", "--version"}, versionHelp = true,
             description = "Print version information and exit.")
     private boolean versionHelpRequested;
 
     /**
-     * App entry point.
+     * The main function of the application.
      *
-     * @param args console params
+     * @param args Parameters entered from the command line.
      */
     public static void main(final String[] args) {
         CommandLine.run(new FindMax(), System.out, args);
     }
 
     /**
-     * <p>App logic.
-     * 1. version request - printing app version.
-     * 2. help request or empty params - printing instruction.
-     * 3. reading and finding maximums from file.
-     * </p>
+     * In this method, the file is read and the search for the largest
+     * elements is performed.
+     * The output is done in std out.
      */
     @Override
     public final void run() {
-        if (versionHelpRequested) {
-            new CommandLine(this).printVersionHelp(System.err);
-        } else if (usageHelpRequested || file == null || nmax <= 0) {
-            new CommandLine(this).usage(System.err);
-        } else {
-            try (Stream<String> stream = Files.lines(Paths.get(file))) {
-                StreamEx.of(stream)
-                        .filter(StringUtils::isNumeric)
-                        .mapToLong(Long::parseLong)
-                        .collect(CollectorsEx.collectNMax(nmax))
-                        .stream()
-                        .forEach(System.out::println);
-            } catch (IOException ex) {
-                System.err.println(ex);
-            }
+        if (numberOfMaximums <= 0) {
+            System.err.println("Parameter --nmax must be greater zero.");
+            return;
+        }
+        try (Stream<String> stream = Files.lines(pathToFile)) {
+            StreamEx.of(stream)
+                    .filter(StringUtils::isNumeric)
+                    .mapToLong(Long::parseLong)
+                    .collect(CollectorsEx.collectNMax(numberOfMaximums))
+                    .stream()
+                    .forEach(System.out::println);
+        } catch (IOException ex) {
+            System.err.println(ex);
         }
     }
 }

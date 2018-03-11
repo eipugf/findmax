@@ -1,5 +1,22 @@
+/*
+ * Copyright 2018 Evgeny Karsskiy
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 /**
- * This package contains the FindMax app classes.
+ * Contains the functionality of the application to search for n maximum
+ * numbers in a file.
  *
  * @author Evgeny Karsskiy
  * @version 0.0.1

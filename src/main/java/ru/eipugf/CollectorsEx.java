@@ -18,118 +18,50 @@ package ru.eipugf;
 
 import one.util.streamex.LongCollector;
 
-import java.util.Set;
-import java.util.TreeSet;
-
 /**
- * Extension of library stream ex.
+ * Implementation of {@link LongCollector} that implement
+ * algorithm for searching N maximal long.
  * <p>
- * <ul>
- * <li><b>collectNMax</b>
- * - Creates a collector to find the n maximum elements.</li>
- * </ul>
+ * <p>The following are examples of using the predefined collector.
+ * <p>
+ * <pre>{@code
+ *     //Accumulate n maximums long elements.
+ *     int n = 10;
+ *    BoundedMaxLongTreeSet maximums = LongStreamEx
+ *                               .of(longList)
+ *                               .collect(CollectorsEx.collectNMax(n));
+ * }</pre>
  *
  * @author Evgeny Karsskiy
- * @see one.util.streamex.LongStreamEx#collect(LongCollector)
  * @since 0.0.1
  */
 public final class CollectorsEx {
-
     /**
-     * Default constructor.
+     * Constructor is hidden, the utility class.
      */
     private CollectorsEx() {
     }
 
     /**
-     * <p><Creates a {@link one.util.streamex.LongCollector} to search for n
+     * <p>Returns a {@link one.util.streamex.LongCollector} to search for n
      * maximal elements in {@link one.util.streamex.LongStreamEx}.</p>
-     * <p>
-     * Example.
-     * {@code LongStreamEx.of(9,10,7,5,8).collect(CollectorsEx.collectNMax(3))}
-     * Returning: 10
-     *            9
-     *            8
-     * </p>
+     * <pre>
+     *     int n = 3;
+     *     BoundedMaxLongTreeSet result = LongStreamEx
+     *                              .of(9,10,7,5,8)
+     *                              .collect(CollectorsEx.collectNMax(n));
+     *     //result contains 10, 9, 8.
+     * </pre>
      *
-     * @param nmax - desirable number of maximums
+     * @param numberOfMaximums desirable number of maximums.
      * @return LongCollector
      * @since 0.0.1
      */
-    public static LongCollector<MaxNBuffer, Set<Long>>
-    collectNMax(final int nmax) {
+    public static LongCollector<BoundedMaxLongTreeSet, BoundedMaxLongTreeSet>
+    collectNMax(final int numberOfMaximums) {
         return LongCollector.of(
-                () -> new MaxNBuffer(nmax),
-                MaxNBuffer::add,
-                MaxNBuffer::addAll,
-                MaxNBuffer::getItems);
-    }
-
-    /**
-     * <p>Represent algorithm for searching N maximal elements in a
-     * {@link one.util.streamex.LongStreamEx}.</p>
-     *
-     * @see one.util.streamex.LongCollector
-     * @see ru.eipugf.CollectorsEx#collectNMax(int nmax)
-     * @since 0.0.1
-     */
-    static class MaxNBuffer {
-        /**
-         * Aggregated maximums.
-         */
-        private final TreeSet<Long> items = new TreeSet<>();
-
-        /**
-         * Desirable number of maximums.
-         */
-        private final int nmax;
-
-        /**
-         * Construct MaxNBuffer for nmax elements.
-         *
-         * @param numberOfMaximums The number of maximums.
-         */
-        MaxNBuffer(final int numberOfMaximums) {
-            if (numberOfMaximums <= 0) {
-                throw new IllegalArgumentException(
-                        "nmax must be greater than zero");
-            }
-            nmax = numberOfMaximums;
-        }
-
-        /**
-         * <p>Add an element if there is a place or element
-         * of the most smallest.</p>
-         *
-         * @param value Long value.
-         */
-        public void add(final long value) {
-            if (items.size() < nmax) {
-                items.add(value);
-            } else if (items.first() < value) {
-                items.pollFirst();
-                items.add(value);
-            }
-        }
-
-        /**
-         * Merge maximum buffers.
-         *
-         * @param other Other maximums buffer.
-         * @return this
-         */
-        public MaxNBuffer addAll(final MaxNBuffer other) {
-            other.items.forEach(this::add);
-            return this;
-        }
-
-        /**
-         * Returning search result.
-         *
-         * @return items
-         */
-        public TreeSet<Long> getItems() {
-            return items;
-        }
+                () -> new BoundedMaxLongTreeSet(numberOfMaximums),
+                (longs, value) -> longs.add(value),
+                BoundedMaxLongTreeSet::addAll);
     }
 }

@@ -71,19 +71,19 @@ class FindMaxSpec extends Specification {
         stdOutStr == result
         stdErrStr == stdErr
         where:
-        file                    | nmax | stdErr                      || result
-        'test_correct_file.txt' | 5    | ''                          || '66\n77\n88\n99\n100\n'
-        'test_correct_file.txt' | 1    | ''                          || '100\n'
-        'test_empty.txt'        | 5    | ''                          || ''
-        'test_not_correct.txt'  | 5    | ''                          || ''
-        'test_with_err_str.txt' | 3    | ''                          || '20\n60\n100\n'
-        'not_exist_file.txt'    | 3    |
-                "java.nio.file.NoSuchFileException: $resDir/$file\n" || ''
+        file                    | nmax | result                  || stdErr
+        'test_correct_file.txt' | 5    | '66\n77\n88\n99\n100\n' || ''
+        'test_correct_file.txt' | 1    | '100\n'                 || ''
+        'test_empty.txt'        | 5    | ''                      || ''
+        'test_not_correct.txt'  | 5    | ''                      || ''
+        'test_with_err_str.txt' | 3    | '20\n60\n100\n'         || ''
+        'test_with_err_str.txt' | -10  | ''                      || 'Parameter --nmax must be greater zero.\n'
+        'not_exist_file.txt'    | 3    | ''                      || "java.nio.file.NoSuchFileException: $resDir/$file\n"
     }
 
     /**
      * Tests for {@link ru.eipugf.FindMax#main(String [] args) )}.
-     * 
+     *
      */
     @Unroll
     def "test main app version with args #args"() {

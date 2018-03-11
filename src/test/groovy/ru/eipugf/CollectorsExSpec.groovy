@@ -48,37 +48,4 @@ class CollectorsExSpec extends Specification {
         [8L, 9L, 5L, 6L, 10L, 7L, 4L, 2L, 3L]     | 3    || (Set<Long>) [10, 9, 8]
         [9L, 6L, 10L, 4L, 1L, 2L, 3L]             | 3    || (Set<Long>) [10, 9, 6]
     }
-
-    /**
-     * <p>Test merge two {@link CollectorsEx.MaxNBuffer ( int ) )}.</p>
-     */
-    @Unroll
-    def "test merge maxNBuffer"() {
-        setup:
-        def maxBufferOne = new CollectorsEx.MaxNBuffer(nmax)
-        def maxBufferTwo = new CollectorsEx.MaxNBuffer(nmax)
-        itemsOne.collect { maxBufferOne.add(it) }
-        itemsTwo.collect { maxBufferTwo.add(it) }
-        when:
-        maxBufferOne.addAll(maxBufferTwo)
-        then:
-        result == maxBufferOne.items
-        where:
-        itemsOne  | itemsTwo  | nmax || result
-        [1, 2, 3] | [4, 5, 6] | 6    || (Set<Long>) [1, 2, 3, 4, 5, 6]
-        [1, 2, 3] | [4, 5, 6] | 5    || (Set<Long>) [2, 3, 4, 5, 6]
-        [4, 3, 6] | [1, 5, 2] | 6    || (Set<Long>) [1, 2, 3, 4, 5, 6]
-        [4, 3, 6] | [1, 5, 2] | 5    || (Set<Long>) [2, 3, 4, 5, 6]
-    }
-
-    /**
-     * <p>Test thrown exceptions for {@link CollectorsEx.MaxNBuffer ( int ) )}
-     * constructor.</p>
-     */
-    def "exception maxNBuffer"() {
-        when:
-        new CollectorsEx.MaxNBuffer(-10)
-        then:
-        thrown IllegalArgumentException
-    }
 }
